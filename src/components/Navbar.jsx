@@ -15,7 +15,14 @@ function Navbar() {
     const navigate = useNavigate()
     const { accessToken, user } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const roles = user?.roles || {};
+    const isBuyer = !!roles.Buyer;
+    const isSeller = !!roles.Seller;
 
+    const handleLogout = () => {
+        dispatch(clearCredentials());
+        navigate("/");
+    };
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: "#b15d5dff", color: "#fff"}}>
@@ -35,15 +42,15 @@ function Navbar() {
                 <Box>
                     {accessToken ? (
                         <>
-                        <Button color="inherit">
+                        <Button color="inherit" onClick={() => navigate('/')}>
                             Hello , {user?.username || "User"}
                         </Button>
 
-                        <Button color="inherit" onClick={() => dispatch(clearCredentials())} >
+                        <Button color="inherit" onClick={() => dispatch(handleLogout)} >
                             Logout
                         </Button>
                         </>
-                    ) : (
+                        ) : (
                         <>
                         <Button color="inherit" onClick={() => setopenLogin(true)}>
                             Login
@@ -59,9 +66,19 @@ function Navbar() {
                         Dashboard
                     </Button>
 
-                    <Button color="inherit" component={Link} to="/listing">
-                        Listing
-                    </Button>
+                    {/* If Buyer → show Listing */}
+                    {isBuyer && (
+                        <Button color="inherit" component={Link} to="/listing">
+                            Listing
+                        </Button>
+                    )}
+
+                    {/* If Seller → show Sell Items */}
+                        {isSeller && (
+                        <Button color="inherit" component={Link} to="/seller">
+                            Sell Items
+                        </Button>
+                    )}
                 </Box>
             </Toolbar>
             </AppBar>

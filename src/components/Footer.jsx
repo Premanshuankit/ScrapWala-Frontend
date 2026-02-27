@@ -19,7 +19,7 @@ function Footer() {
         sx={{
           backgroundColor: "#b15d5dff",
           color: "#ffffff",
-          mt: 8,
+          mt: 0,
           pt: 8,
           borderTopLeftRadius: 20,
           borderTopRightRadius: 20,
