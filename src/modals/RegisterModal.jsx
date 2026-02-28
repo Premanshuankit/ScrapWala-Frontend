@@ -7,7 +7,8 @@ function RegisterModal({ open, handleClose }) {
     
     const [registerUser, { isLoading }] = useRegisterMutation();
     const [errors, setErrors] = useState({});
-    const [hide, setHide] = useState(true)
+    const [hide, setHide] = useState(true);
+    const [shopImage, setShopImage] = useState(null);
 
     const [formData, setFormData] = useState({
     user: "",
@@ -16,6 +17,7 @@ function RegisterModal({ open, handleClose }) {
     email: "",
     mobile: "",
     pwd: "",
+    shopname: "",
     address: {
         street: "",
         city: "",
@@ -47,21 +49,50 @@ function RegisterModal({ open, handleClose }) {
         if (!formData.email) newErrors.email = "Email is required";
         if (!formData.pwd) newErrors.pwd = "Password is required";
 
+        if (formData.roles.includes("Buyer")) {
+            if (!formData.shopname || formData.shopname.length < 5) {
+                newErrors.shopname = "Shop name must be at least 5 characters";
+            }
+
+            if (!shopImage) {
+                newErrors.shopImage = "Shop image is required";
+            }
+        }
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
 
-        const payload = {
-            ...formData,
-            roles:
-            formData.roles.length === 0
-                ? ["Seller"]
-                : formData.roles,
-        };
+        // const payload = {
+        //     ...formData,
+        //     roles:
+        //     formData.roles.length === 0
+        //         ? ["Seller"]
+        //         : formData.roles,
+        // };
+
+        const formDataToSend = new FormData();
+
+        formDataToSend.append("user", formData.user);
+        formDataToSend.append("fname", formData.fname);
+        formDataToSend.append("lname", formData.lname);
+        formDataToSend.append("email", formData.email);
+        formDataToSend.append("mobile", formData.mobile);
+        formDataToSend.append("pwd", formData.pwd);
+        formDataToSend.append("shopname", formData.shopname);
+
+        formData.roles.forEach((role) => {
+            formDataToSend.append("roles", role);
+        });
+        formDataToSend.append("address", JSON.stringify(formData.address));
+
+        if (shopImage) {
+            formDataToSend.append("shopImage", shopImage);
+        }
 
         try {
-            const response = await registerUser(payload).unwrap();
+            const response = await registerUser(formDataToSend).unwrap();
 
             console.log("Registered:", response);
 
@@ -254,6 +285,76 @@ function RegisterModal({ open, handleClose }) {
                         label="Shopkeeper"
                         />
                     </Box>
+
+                    <Grid container spacing={2}>
+                        {formData.roles.includes("Buyer") && (
+                            <>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                fullWidth
+                                label="Shop Name"
+                                name="shopname"
+                                value={formData.shopname}
+                                error={Boolean(errors.shopname)}
+                                helperText={errors.shopname}
+                                required
+                                onChange={handleChange}
+                                inputProps={{ minLength: 5 }}
+                                />
+                            </Grid>
+
+                            <Grid item xs={12} sm={4}>
+                                <TextField
+                                    fullWidth
+                                    type="file"
+                                    label="Upload Shop Image"
+                                    InputLabelProps={{ shrink: true }}
+                                    inputProps={{ accept: "image/jpeg,image/png,image/webp" }}
+                                >
+                                Upload Shop Image
+                                <input
+                                    type="file"
+                                    hidden
+                                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                                    onChange={(e) => {
+                                    const file = e.target.files[0];
+
+                                    if (file) {
+                                        const allowedTypes = [
+                                        "image/jpeg",
+                                        "image/jpg",
+                                        "image/png",
+                                        "image/webp",
+                                        ];
+
+                                        if (!allowedTypes.includes(file.type)) {
+                                        setErrors((prev) => ({
+                                            ...prev,
+                                            shopImage: "Only jpeg, jpg, png, webp allowed",
+                                        }));
+                                        return;
+                                        }
+
+                                        setShopImage(file);
+                                        setErrors((prev) => ({
+                                        ...prev,
+                                        shopImage: "",
+                                        }));
+                                    }
+                                    }}
+                                />
+                                </TextField>
+
+                                {errors.shopImage && (
+                                <Typography color="error" variant="caption">
+                                    {errors.shopImage}
+                                </Typography>
+                                )}
+                            </Grid>
+                            </>
+                        )}
+                    </Grid>
+
                 </DialogContent>
 
                 <DialogActions sx={{ px: 3, pb: 2 }}>

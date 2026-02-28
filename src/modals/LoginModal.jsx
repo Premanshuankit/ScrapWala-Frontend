@@ -48,12 +48,7 @@ function LoginModal({ open, handleClose }) {
         const response = await loginUser(formData).unwrap();
 
         console.log("Login Success:", response);
-        dispatch(
-          setCredentials({
-            accessToken: response.accessToken,
-            user: response.user
-          })
-        );
+        dispatch( setCredentials(response.user) );
 
         handleClose();
       } catch (err) {

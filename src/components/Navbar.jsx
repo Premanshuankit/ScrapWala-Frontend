@@ -13,7 +13,7 @@ function Navbar() {
     const [openRegister, setOpenRegister] = useState(false)
     const [openLogin, setopenLogin] = useState(false)
     const navigate = useNavigate()
-    const { accessToken, user } = useSelector((state) => state.auth);
+    const user = useSelector((state) => state.auth.user);
     const dispatch = useDispatch();
     const roles = user?.roles || {};
     const isBuyer = !!roles.Buyer;
@@ -40,7 +40,7 @@ function Navbar() {
                 </Box>
 
                 <Box>
-                    {accessToken ? (
+                    {user ? (
                         <>
                         <Button color="inherit" onClick={() => navigate('/')}>
                             Hello , {user?.username || "User"}

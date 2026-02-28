@@ -6,7 +6,7 @@ export const listingApi = createApi({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     credentials: "include",
       prepareHeaders: (headers, { getState }) => {
-        const token = getState().auth.accessToken;
+        const token = getState().auth.user.accessToken;
         console.log('tokennnnv', token)
 
         if (token) {
