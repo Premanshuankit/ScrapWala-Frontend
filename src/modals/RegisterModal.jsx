@@ -53,7 +53,7 @@ function RegisterModal({ open, handleClose }) {
             if (!formData.shopname || formData.shopname.length < 5) {
                 newErrors.shopname = "Shop name must be at least 5 characters";
             }
-
+            console.log("ShopImage:", shopImage);
             if (!shopImage) {
                 newErrors.shopImage = "Shop image is required";
             }
@@ -289,68 +289,70 @@ function RegisterModal({ open, handleClose }) {
                     <Grid container spacing={2}>
                         {formData.roles.includes("Buyer") && (
                             <>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                fullWidth
-                                label="Shop Name"
-                                name="shopname"
-                                value={formData.shopname}
-                                error={Boolean(errors.shopname)}
-                                helperText={errors.shopname}
-                                required
-                                onChange={handleChange}
-                                inputProps={{ minLength: 5 }}
-                                />
-                            </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                    fullWidth
+                                    label="Shop Name"
+                                    name="shopname"
+                                    value={formData.shopname}
+                                    error={Boolean(errors.shopname)}
+                                    helperText={errors.shopname}
+                                    required
+                                    onChange={handleChange}
+                                    inputProps={{ minLength: 5 }}
+                                    />
+                                </Grid>
 
-                            <Grid item xs={12} sm={4}>
+                                <Grid item xs={12} sm={6}>
                                 <TextField
                                     fullWidth
                                     type="file"
                                     label="Upload Shop Image"
                                     InputLabelProps={{ shrink: true }}
-                                    inputProps={{ accept: "image/jpeg,image/png,image/webp" }}
-                                >
-                                Upload Shop Image
-                                <input
-                                    type="file"
-                                    hidden
-                                    accept="image/jpeg,image/jpg,image/png,image/webp"
+                                    inputProps={{
+                                        accept: "image/jpeg,image/jpg,image/png,image/webp",
+                                    }}
                                     onChange={(e) => {
-                                    const file = e.target.files[0];
+                                        const file = e.target.files[0];
 
-                                    if (file) {
-                                        const allowedTypes = [
-                                        "image/jpeg",
-                                        "image/jpg",
-                                        "image/png",
-                                        "image/webp",
-                                        ];
+                                        if (file) {
+                                            const allowedTypes = [
+                                            "image/jpeg",
+                                            "image/jpg",
+                                            "image/png",
+                                            "image/webp",
+                                            ];
 
-                                        if (!allowedTypes.includes(file.type)) {
-                                        setErrors((prev) => ({
+                                            if (!allowedTypes.includes(file.type)) {
+                                            setErrors((prev) => ({
+                                                ...prev,
+                                                shopImage: "Only jpeg, jpg, png, webp allowed",
+                                            }));
+                                            setShopImage(null);
+                                            return;
+                                            }
+
+                                            setShopImage(file);
+                                            setErrors((prev) => ({
                                             ...prev,
-                                            shopImage: "Only jpeg, jpg, png, webp allowed",
-                                        }));
-                                        return;
+                                            shopImage: "",
+                                            }));
                                         }
-
-                                        setShopImage(file);
-                                        setErrors((prev) => ({
-                                        ...prev,
-                                        shopImage: "",
-                                        }));
-                                    }
                                     }}
                                 />
-                                </TextField>
+
+                                {shopImage && (
+                                    <Typography variant="caption" color="success.main">
+                                    Selected: {shopImage.name}
+                                    </Typography>
+                                )}
 
                                 {errors.shopImage && (
-                                <Typography color="error" variant="caption">
+                                    <Typography color="error" variant="caption">
                                     {errors.shopImage}
-                                </Typography>
+                                    </Typography>
                                 )}
-                            </Grid>
+                                </Grid>
                             </>
                         )}
                     </Grid>

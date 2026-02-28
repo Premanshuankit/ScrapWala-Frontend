@@ -3,6 +3,7 @@ import { Suspense, lazy } from "react";
 
 import Dashboard from "./pages/Dashboard";
 import Listing from "./pages/Listing";
+import Seller from "./pages/Seller";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import Navbar from "./components/Navbar";
@@ -19,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/listing" element={<Listing />} />
+          <Route path="/seller" element={<Seller />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
