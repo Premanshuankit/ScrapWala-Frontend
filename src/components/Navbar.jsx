@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box, Badge } from "@mui/material";
 import RecyclingIcon from "@mui/icons-material/Recycling";
 import { Link } from "react-router-dom";
 import RegisterModal from "../modals/RegisterModal";
@@ -7,6 +7,8 @@ import LoginModal from "../modals/LoginModal";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCredentials } from "../features/auth/authSlice";
+import { useGetMySellRequestsQuery } from "../features/seller/sellerApi";
+import { useGetIncomingRequestsQuery } from "../features/transaction/transactionApi"; 
 
 function Navbar() {
 
@@ -23,6 +25,15 @@ function Navbar() {
         dispatch(clearCredentials());
         navigate("/");
     };
+
+    const { data: requests = [] } = useGetMySellRequestsQuery(undefined, {
+        skip: !isSeller,
+    });
+
+    const { data: incomingRequests = [] } = useGetIncomingRequestsQuery(undefined, {
+        skip: !isBuyer,
+    });
+
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: "#b15d5dff", color: "#fff"}}>
@@ -62,22 +73,51 @@ function Navbar() {
                         </>
                     )}
 
-                    <Button color="inherit" component={Link} to="/dashboard">
-                        Dashboard
-                    </Button>
-
                     {/* If Buyer → show Listing */}
                     {isBuyer && (
-                        <Button color="inherit" component={Link} to="/listing">
-                            Listing
-                        </Button>
+                        <>
+                            <Button color="inherit" component={Link} to="/listing">
+                                Listing
+                            </Button>
+                            {isBuyer && (
+                                <Badge
+                                    badgeContent={incomingRequests.length}
+                                    color="error"
+                                    overlap="rectangular"
+                                    sx={{
+                                    "& .MuiBadge-badge": {
+                                        top: -6,
+                                        right: "20%",
+                                        transform: "translateX(50%)",
+                                    },
+                                    }}
+                                >
+                                    <Button color="inherit" component={Link} to="/seller/incoming">
+                                    Dashboard
+                                    </Button>
+                                </Badge>
+                            )}
+                        </>                        
                     )}
 
                     {/* If Seller → show Sell Items */}
+                    
                         {isSeller && (
-                        <Button color="inherit" component={Link} to="/seller">
-                            Sell Items
-                        </Button>
+                         <>
+                            <Button color="inherit" component={Link} to="/seller">
+                                Sell Items
+                            </Button>
+
+                            {isSeller && (
+                                <Badge badgeContent={requests?.length || 0} color="error">
+                                    <Button component={Link} to="/seller/requests" color="inherit">
+                                        My Requests
+                                    </Button>
+                                </Badge>
+                            )}
+                        </>
+
+                        
                     )}
                 </Box>
             </Toolbar>
