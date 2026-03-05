@@ -7,6 +7,8 @@ import Seller from "./pages/Seller";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import Navbar from "./components/Navbar";
+import BuyerIncoming from "./pages/BuyerIncoming";
+import SellerRequests from "./pages/SellerRequests";
 
 const Home = lazy(() => import("./components/Home"));
 
@@ -21,6 +23,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/listing" element={<Listing />} />
           <Route path="/seller" element={<Seller />} />
+          <Route path="/seller/incoming" element={<BuyerIncoming />} />
+          <Route path="/seller/requests" element={<SellerRequests />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
 
