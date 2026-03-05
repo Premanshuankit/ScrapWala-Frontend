@@ -130,13 +130,17 @@ function ScrapListing() {
               setSelectedTypes(newValue);
             }}
             renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  label={option.toUpperCase()}
-                  {...getTagProps({ index })}
-                  color="primary"
-                />
-              ))
+              value.map((option, index) => {
+                const { key, ...props } = getTagProps({ index });
+
+                return (
+                  <Chip
+                    key={key}   //key passed directly
+                    label={option}
+                    {...props}
+                  />
+                );
+              })
             }
             renderInput={(params) => (
               <TextField
