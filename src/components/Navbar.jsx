@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Box, Badge } from "@mui/material";
 import RecyclingIcon from "@mui/icons-material/Recycling";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import RegisterModal from "../modals/RegisterModal";
 import LoginModal from "../modals/LoginModal";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +34,13 @@ function Navbar() {
         skip: !isBuyer,
     });
 
+    const activeNav = {
+        "&.active": {
+            fontWeight: 700,
+            borderBottom: "2px solid white",
+        },
+    };
+
     return (
         <>
             <AppBar position="static" sx={{ backgroundColor: "#b15d5dff", color: "#fff"}}>
@@ -53,7 +60,9 @@ function Navbar() {
                 <Box>
                     {user ? (
                         <>
-                        <Button color="inherit" onClick={() => navigate('/')}>
+                        <Button color="inherit" to='/'  end
+                            component={NavLink}
+                            sx={activeNav}>
                             Hello , {user?.username || "User"}
                         </Button>
 
@@ -76,7 +85,8 @@ function Navbar() {
                     {/* If Buyer → show Listing */}
                     {isBuyer && (
                         <>
-                            <Button color="inherit" component={Link} to="/listing">
+                            <Button color="inherit" component={NavLink} to="/listing" 
+                                sx={activeNav}>
                                 Listing
                             </Button>
                             {isBuyer && (
@@ -92,7 +102,8 @@ function Navbar() {
                                     },
                                     }}
                                 >
-                                    <Button color="inherit" component={Link} to="/seller/incoming">
+                                    <Button color="inherit" component={NavLink} to="/seller/incoming" 
+                                        sx={activeNav}>
                                     Dashboard
                                     </Button>
                                 </Badge>
@@ -104,13 +115,15 @@ function Navbar() {
                     
                         {isSeller && (
                          <>
-                            <Button color="inherit" component={Link} to="/seller">
+                            <Button color="inherit" component={NavLink} to="/seller" end
+                                sx={activeNav}>
                                 Sell Items
                             </Button>
 
                             {isSeller && (
                                 <Badge badgeContent={requests?.length || 0} color="error">
-                                    <Button component={Link} to="/seller/requests" color="inherit">
+                                    <Button component={NavLink} to="/seller/requests" color="inherit" 
+                                        sx={activeNav}>
                                         My Requests
                                     </Button>
                                 </Badge>
