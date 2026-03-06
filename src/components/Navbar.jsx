@@ -7,8 +7,9 @@ import LoginModal from "../modals/LoginModal";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCredentials } from "../features/auth/authSlice";
+import { useLogoutMutation } from "../features/auth/authApi";
 import { useGetMySellRequestsQuery } from "../features/seller/sellerApi";
-import { useGetIncomingRequestsQuery } from "../features/transaction/transactionApi"; 
+import { useGetIncomingRequestsQuery } from "../features/transaction/transactionApi";
 
 function Navbar() {
 
@@ -20,10 +21,17 @@ function Navbar() {
     const roles = user?.roles || {};
     const isBuyer = !!roles.Buyer;
     const isSeller = !!roles.Seller;
+    const [logout] = useLogoutMutation();
 
-    const handleLogout = () => {
-        dispatch(clearCredentials());
-        navigate("/");
+    const handleLogout = async () => {
+        try {
+            await logout().unwrap();
+        } catch (err) {
+            console.error("Logout failed :", err);
+        } finally {
+            dispatch(clearCredentials());
+            navigate("/");
+        }
     };
 
     const { data: requests = [] } = useGetMySellRequestsQuery(undefined, {
@@ -66,7 +74,7 @@ function Navbar() {
                             Hello , {user?.username || "User"}
                         </Button>
 
-                        <Button color="inherit" onClick={() => dispatch(handleLogout)} >
+                        <Button color="inherit" onClick={handleLogout} >
                             Logout
                         </Button>
                         </>
@@ -96,10 +104,10 @@ function Navbar() {
                                     overlap="rectangular"
                                     sx={{
                                     "& .MuiBadge-badge": {
-                                        top: -6,
-                                        right: "20%",
-                                        transform: "translateX(50%)",
-                                    },
+                                            top: -8,
+                                            right: "20%",
+                                            transform: "translateX(50%)",
+                                        },
                                     }}
                                 >
                                     <Button color="inherit" component={NavLink} to="/seller/incoming" 
@@ -121,7 +129,14 @@ function Navbar() {
                             </Button>
 
                             {isSeller && (
-                                <Badge badgeContent={requests?.length || 0} color="error">
+                                <Badge badgeContent={requests?.length || 0} color="error"
+                                    sx={{
+                                        "& .MuiBadge-badge": {
+                                                top: -8,
+                                                right: "20%",
+                                                transform: "translateX(50%)",
+                                            },
+                                    }}>
                                     <Button component={NavLink} to="/seller/requests" color="inherit" 
                                         sx={activeNav}>
                                         My Requests

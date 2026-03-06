@@ -12,7 +12,7 @@ export const transactionApi = createApi({
     },
   }),
 
-  tagTypes: ["SellRequest", "Order"],
+  tagTypes: ["SellRequests", "Orders"],
 
   endpoints: (builder) => ({
     createSellRequest: builder.mutation({
@@ -31,7 +31,7 @@ export const transactionApi = createApi({
 
     getIncomingRequests: builder.query({
       query: () => "/seller/incoming",
-      providesTags: ["SellRequest"],
+      providesTags: ["SellRequests"],
     }),
 
     rejectSellRequest: builder.mutation({
@@ -39,7 +39,7 @@ export const transactionApi = createApi({
         url: `/seller/${id}/reject`,
         method: "PATCH",
       }),
-      invalidatesTags: ["SellRequest"],
+      invalidatesTags: ["SellRequests"],
     }),
 
     createOrder: builder.mutation({
@@ -47,7 +47,7 @@ export const transactionApi = createApi({
         url: `/order/${sellRequestId}`,
         method: "POST",
       }),
-      invalidatesTags: ["SellRequest", "Order"],
+      invalidatesTags: ["SellRequests", "Orders"],
     }),
 
     getBuyerOrders: builder.query({

@@ -19,6 +19,7 @@ export const sellerApi = createApi({
   endpoints: (builder) => ({
     getMySellRequests: builder.query({
       query: () => "/seller/requests",
+      providesTags: ["SellRequests"],
     }),
 
     getSellerOrders: builder.query({
