@@ -5,6 +5,21 @@ import { listingApi } from "../features/listing/listingApi";
 import { marketplaceApi } from "../features/marketplace/marketplaceApi";
 import { transactionApi } from "../features/transaction/transactionApi";
 import { sellerApi } from "../features/seller/sellerApi";
+import { inventoryApi } from "../features/inventory/inventoryApi";
+
+import { persistStore, persistReducer } from "redux-persist";
+
+import storage from "redux-persist/lib/storage";
+
+const persistConfig = {
+  key: "auth",
+  storage
+};
+
+const persistedReducer = persistReducer(
+  persistConfig,
+  authReducer
+);
 
 export const store = configureStore({
   reducer: {
@@ -13,9 +28,12 @@ export const store = configureStore({
     [marketplaceApi.reducerPath]: marketplaceApi.reducer,
     [transactionApi.reducerPath]: transactionApi.reducer,
     [sellerApi.reducerPath]: sellerApi.reducer,
-    auth: authReducer,
+    [inventoryApi.reducerPath]: inventoryApi.reducer,
+    auth: persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(authApi.middleware, listingApi.middleware, 
-    marketplaceApi.middleware, transactionApi.middleware, sellerApi.middleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(authApi.middleware, listingApi.middleware, 
+    marketplaceApi.middleware, transactionApi.middleware, sellerApi.middleware, inventoryApi.middleware),    
 });
+
+export const persistor = persistStore(store);
