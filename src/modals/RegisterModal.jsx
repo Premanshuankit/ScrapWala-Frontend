@@ -82,9 +82,7 @@ function RegisterModal({ open, handleClose }) {
         formDataToSend.append("pwd", formData.pwd);
         formDataToSend.append("shopname", formData.shopname);
 
-        formData.roles.forEach((role) => {
-            formDataToSend.append("roles", role);
-        });
+        formDataToSend.append("roles", JSON.stringify(formData.roles));
         formDataToSend.append("address", JSON.stringify(formData.address));
 
         if (shopImage) {
@@ -98,7 +96,7 @@ function RegisterModal({ open, handleClose }) {
 
             handleClose(); // close modal
         } catch (err) {
-            console.error(err);
+            console.error(err, 'register');
 
             if (err?.data?.message?.includes("username")) {
                 setErrors((prev) => ({

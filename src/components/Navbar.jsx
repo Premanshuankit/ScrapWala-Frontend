@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AppBar, Toolbar, Typography, Button, Box, Badge } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Box, Badge , Avatar, IconButton, Menu, MenuItem, Divider} from "@mui/material";
 import RecyclingIcon from "@mui/icons-material/Recycling";
 import { NavLink } from "react-router-dom";
 import RegisterModal from "../modals/RegisterModal";
@@ -22,6 +22,17 @@ function Navbar() {
     const isBuyer = !!roles.Buyer;
     const isSeller = !!roles.Seller;
     const [logout] = useLogoutMutation();
+
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const handleLogout = async () => {
         try {
@@ -68,7 +79,7 @@ function Navbar() {
                 <Box>
                     {user ? (
                         <>
-                        <Button color="inherit" to='/'  end
+                        {/* <Button color="inherit" to='/'  end
                             component={NavLink}
                             sx={activeNav}>
                             Hello , {user?.username || "User"}
@@ -76,7 +87,7 @@ function Navbar() {
 
                         <Button color="inherit" onClick={handleLogout} >
                             Logout
-                        </Button>
+                        </Button> */}
                         </>
                         ) : (
                         <>
@@ -97,7 +108,7 @@ function Navbar() {
                                 sx={activeNav}>
                                 Listing
                             </Button>
-                            {isBuyer && (
+                            {/* {isBuyer && ( */}
                                 <Badge
                                     badgeContent={incomingRequests.length}
                                     color="error"
@@ -115,20 +126,20 @@ function Navbar() {
                                     Dashboard
                                     </Button>
                                 </Badge>
-                            )}
+                            {/* )} */}
                         </>                        
                     )}
 
-                    {/* If Seller → show Sell Items */}
+                    {/* If User → show Sell Items */}
                     
-                        {isSeller && (
+                        {user && (
                          <>
                             <Button color="inherit" component={NavLink} to="/seller" end
                                 sx={activeNav}>
                                 Sell Items
                             </Button>
 
-                            {isSeller && (
+                            {/* {isSeller && ( */}
                                 <Badge badgeContent={requests?.length || 0} color="error"
                                     sx={{
                                         "& .MuiBadge-badge": {
@@ -142,10 +153,46 @@ function Navbar() {
                                         My Requests
                                     </Button>
                                 </Badge>
-                            )}
+                            {/* )} */}
                         </>
 
                         
+                    )}
+
+                    { user && (
+                        <>
+                            <IconButton onClick={handleClick}>
+                                <Avatar sx={{ bgcolor: "#c49a6c", width: 36, height: 36 }}>
+                                </Avatar>
+                            </IconButton>
+                    
+                    
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                >
+                                <MenuItem color="inherit" to='/'
+                                    component={NavLink}
+                                    sx={activeNav}>
+                                    {user?.username || "User"}
+                                </MenuItem>
+
+                                { isBuyer && (
+                                    <MenuItem color="inherit" to='/inventory'
+                                        component={NavLink}
+                                        sx={activeNav}>
+                                        Inventory
+                                    </MenuItem>
+                                )}
+
+                                <Divider />
+                                
+                                <MenuItem color="inherit" onClick={handleLogout} >
+                                    Logout
+                                </MenuItem>
+                            </Menu>
+                        </>
                     )}
                 </Box>
             </Toolbar>
