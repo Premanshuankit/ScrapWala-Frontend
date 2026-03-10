@@ -10,28 +10,48 @@ import {
   Chip
 } from "@mui/material";
 import { useCreateListingMutation, useCreateAllListingMutation } from "../features/listing/listingApi";
+import iron from "../assets/iron.png";
+import steel from "../assets/steel.png";
+import tina from "../assets/tina.png";
+import aluminium from "../assets/aluminium.png";
+import copper from "../assets/copper.png";
+import pital from "../assets/pital.png";
+import carton from "../assets/carton.png";
+import books from "../assets/books.png";
+import newspaper from "../assets/newspaper.png";
+import magazine from "../assets/magazine.png";
+import plastic from "../assets/plastic.png";
+import petBottle from "../assets/pet-bottle.png";
+import glass from "../assets/glass.png";
+import ewaste from "../assets/e-waste.png";
+import battery from "../assets/battery.png";
+import cableWire from "../assets/cable-wire.png";
+import motor from "../assets/motor.png";
+import fridge from "../assets/fridge.png";
+import ac from "../assets/ac.png";
+import washingMachine from "../assets/washing-machine.png";
 
 const SCRAP_TYPES = [
-    { type: "iron", defaultRate: 30, image: "src/assets/iron.png" },
-    { type: "steel", defaultRate: 58, image: "src/assets/steel.png" },
-    { type: "tina", defaultRate: 16, image: "src/assets/tina.png" },
-    { type: "aluminium", defaultRate: 120, image: "src/assets/aluminium.png" },
-    { type: "copper", defaultRate: 600, image: "src/assets/copper.png" },
-    { type: "pital", defaultRate: 400, image: "src/assets/pital.png" },
-    { type: "carton", defaultRate: 10, image: "src/assets/carton.png" },
-    { type: "books", defaultRate: 13, image: "src/assets/books.png" },
-    { type: "newspaper", defaultRate: 20, image: "src/assets/newspaper.png" },
-    { type: "magazine", defaultRate: 14, image: "src/assets/magazine.png" },
-    { type: "plastic", defaultRate: 11, image: "src/assets/plastic.png" },
-    { type: "pet-bottle", defaultRate: 20, image: "src/assets/pet-bottle.png" },
-    { type: "glass", defaultRate: 5, image: "src/assets/glass.png" },
-    { type: "e-waste", defaultRate: 100, image: "src/assets/e-waste.png" },
-    { type: "battery", defaultRate: 90, image: "src/assets/battery.png" },
-    { type: "cable-wire", defaultRate: 130, image: "src/assets/cable-wire.png" },
-    { type: "motor", defaultRate: 600, image: "src/assets/motor.png" },
-    { type: "fridge", defaultRate: 13, image: "src/assets/fridge.png" },
-    { type: "ac", defaultRate: 200, image: "src/assets/ac.png" },
-    { type: "washing-machine", defaultRate: 23, image: "src/assets/washing-machine.png" },
+  { type: "iron", defaultRate: 30, image: iron },
+  { type: "steel", defaultRate: 58, image: steel },
+  { type: "tina", defaultRate: 16, image: tina },
+  { type: "aluminium", defaultRate: 120, image: aluminium },
+  { type: "copper", defaultRate: 600, image: copper },
+  { type: "pital", defaultRate: 400, image: pital },
+  { type: "carton", defaultRate: 10, image: carton },
+  { type: "books", defaultRate: 13, image: books },
+  { type: "newspaper", defaultRate: 20, image: newspaper },
+  { type: "magazine", defaultRate: 14, image: magazine },
+  { type: "plastic", defaultRate: 11, image: plastic },
+  { type: "pet-bottle", defaultRate: 20, image: petBottle },
+  { type: "glass", defaultRate: 5, image: glass },
+  { type: "e-waste", defaultRate: 100, image: ewaste },
+  { type: "battery", defaultRate: 90, image: battery },
+  { type: "cable-wire", defaultRate: 130, image: cableWire },
+  { type: "motor", defaultRate: 600, image: motor },
+  { type: "fridge", defaultRate: 13, image: fridge },
+  { type: "ac", defaultRate: 200, image: ac },
+  { type: "washing-machine", defaultRate: 23, image: washingMachine }
 ];
 
 function ScrapListing() {
