@@ -19,16 +19,18 @@ function App() {
 
         <Navbar />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/listing" element={<Listing />} />
-          <Route path="/seller" element={<Seller />} />
-          <Route path="/seller/incoming" element={<BuyerIncoming />} />
-          <Route path="/seller/requests" element={<SellerRequests />} />
-          <Route path="/inventory" element={<Inventory />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/listing" element={<Listing />} />
+            <Route path="/seller" element={<Seller />} />
+            <Route path="/seller/incoming" element={<BuyerIncoming />} />
+            <Route path="/seller/requests" element={<SellerRequests />} />
+            <Route path="/inventory" element={<Inventory />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
 
         <Footer />
       </Router>
