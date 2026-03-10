@@ -206,11 +206,11 @@ function SellerLanding() {
             minWidth: 0,
           }}
           onClick={() =>
-            setSelectedImage(`http://localhost:3000/${item.buyer.shopImage}`)
+            setSelectedImage(`https://scrapwallah.onrender.com/${item.buyer.shopImage}`)
           }
         >
           <Avatar
-            src={`http://localhost:3000/${item.buyer.shopImage}`}
+            src={`https://scrapwallah.onrender.com/${item.buyer.shopImage}`}
             sx={{ width: 42, height: 42 }}
           />
           <Typography noWrap sx={{ minWidth: 0 }}>
