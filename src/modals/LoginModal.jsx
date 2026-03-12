@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useLoginMutation } from "../features/auth/authApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/authSlice";
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, Box } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Typography, Box, 
+  Snackbar, Alert } from "@mui/material";
 
 function LoginModal({ open, handleClose }) {
     const [loginUser, { isLoading }] = useLoginMutation();
@@ -11,6 +12,11 @@ function LoginModal({ open, handleClose }) {
     const [formData, setFormData] = useState({ identifier: "", pwd: "" });
 
     const [errors, setErrors] = useState({});
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
 
     const handleChange = (e) => {
       const { name, value } = e.target;
@@ -49,7 +55,7 @@ function LoginModal({ open, handleClose }) {
 
         console.log("Login Success:", response);
         dispatch( setCredentials(response.user) );
-
+        setSnackbarOpen(true);
         handleClose();
       } catch (err) {
         console.error(err);
@@ -62,72 +68,88 @@ function LoginModal({ open, handleClose }) {
     };
 
   return (
-    <Dialog
-        open={open}
-        onClose={handleClose}
-        fullWidth
-        maxWidth="xs"
-        PaperProps={{
-          sx: { borderRadius: 3, p: 1 },
-        }} >
-      <DialogTitle sx={{ fontWeight: 600 }}>
-        Login
-      </DialogTitle>
+    <>
+      <Dialog
+          open={open}
+          onClose={handleClose}
+          fullWidth
+          maxWidth="xs"
+          PaperProps={{
+            sx: { borderRadius: 3, p: 1 },
+          }} >
+        <DialogTitle sx={{ fontWeight: 600 }}>
+          Login
+        </DialogTitle>
 
-      <form onSubmit={handleSubmit}>
-        <DialogContent>
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="body2" sx={{ mb: 1 }}>
-              Enter your username, email, or mobile
-            </Typography>
+        <form onSubmit={handleSubmit}>
+          <DialogContent>
+            <Box sx={{ mb: 2 }}>
+              <Typography variant="body2" sx={{ mb: 1 }}>
+                Enter your username, email, or mobile
+              </Typography>
+
+              <TextField
+                fullWidth
+                label="Username / Email / Mobile"
+                name="identifier"
+                value={formData.identifier}
+                onChange={handleChange}
+                required
+                error={Boolean(errors.identifier)}
+                helperText={errors.identifier}
+              />
+            </Box>
 
             <TextField
               fullWidth
-              label="Username / Email / Mobile"
-              name="identifier"
-              value={formData.identifier}
+              label="Password"
+              type="password"
+              name="pwd"
+              value={formData.password}
               onChange={handleChange}
               required
-              error={Boolean(errors.identifier)}
-              helperText={errors.identifier}
+              error={Boolean(errors.pwd)}
+              helperText={errors.pwd}
+              inputProps={{ minLength: 6 }}
             />
-          </Box>
+          </DialogContent>
 
-          <TextField
-            fullWidth
-            label="Password"
-            type="password"
-            name="pwd"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            error={Boolean(errors.pwd)}
-            helperText={errors.pwd}
-            inputProps={{ minLength: 6 }}
-          />
-        </DialogContent>
+          <DialogActions sx={{ px: 3, pb: 2 }}>
+            <Button onClick={handleClose} color="inherit">
+              Cancel
+            </Button>
 
-        <DialogActions sx={{ px: 3, pb: 2 }}>
-          <Button onClick={handleClose} color="inherit">
-            Cancel
-          </Button>
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isLoading}
+              sx={{
+                borderRadius: 2,
+                backgroundColor: "#b15d5dff",
+                color: "#fff",
+                px: 3,
+              }}
+            >
+              {isLoading ? "Logging in..." : "Login"}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
 
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isLoading}
-            sx={{
-              borderRadius: 2,
-              backgroundColor: "#b15d5dff",
-              color: "#fff",
-              px: 3,
-            }}
-          >
-            {isLoading ? "Logging in..." : "Login"}
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}>
+        <Alert
+            onClose={handleSnackbarClose}
+            severity="success"
+            variant="filled"
+            sx={{ width: "100%" }}>
+            Login successful
+        </Alert>
+      </Snackbar>
+    </>
   );
 }
 

@@ -43,7 +43,7 @@ function SellerLanding() {
 
   const { data, isFetching } = useGetAllListingsQuery({
     page,
-    limit: 10,
+    limit: 30,
     shopname: debouncedShopFilter,
     scrapType: scrapFilter,
     firstname: debouncedFirstnameFilter,

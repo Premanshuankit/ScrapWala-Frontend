@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRegisterMutation } from "../features/auth/authApi";
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Grid, Typography, Divider, 
-    FormControlLabel, Checkbox, Box } from "@mui/material";
+    FormControlLabel, Checkbox, Box, Snackbar, Alert } from "@mui/material";
 
 function RegisterModal({ open, handleClose }) {
     
@@ -9,6 +9,7 @@ function RegisterModal({ open, handleClose }) {
     const [errors, setErrors] = useState({});
     const [hide, setHide] = useState(true);
     const [shopImage, setShopImage] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
 
     const [formData, setFormData] = useState({
     user: "",
@@ -26,6 +27,10 @@ function RegisterModal({ open, handleClose }) {
     },
     roles: ["Seller"],
     });
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -93,7 +98,7 @@ function RegisterModal({ open, handleClose }) {
             const response = await registerUser(formDataToSend).unwrap();
 
             console.log("Registered:", response);
-
+            setSnackbarOpen(true);   // show success message
             handleClose(); // close modal
         } catch (err) {
             console.error(err, 'register');
@@ -160,219 +165,237 @@ function RegisterModal({ open, handleClose }) {
     };
 
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            fullWidth
-            maxWidth="sm"
-            PaperProps={{
-                sx: {
-                    borderRadius: 3,
-                p: 1,
-                },
-            }}
-            >
-            <DialogTitle sx={{ fontWeight: 600 }}>Create Account</DialogTitle>
+        <>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                fullWidth
+                maxWidth="sm"
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                    p: 1,
+                    },
+                }}
+                >
+                <DialogTitle sx={{ fontWeight: 600 }}>Create Account</DialogTitle>
 
-            <form onSubmit={handleSubmit}>
-                <DialogContent sx={{ pt: 1 }}>
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                        Basic Information
-                    </Typography>
+                <form onSubmit={handleSubmit}>
+                    <DialogContent sx={{ pt: 1 }}>
+                        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                            Basic Information
+                        </Typography>
 
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} sm={6}>
-                            <TextField fullWidth label="Username" name="user" value={formData.user} error={Boolean(errors.user)}
-                                helperText={errors.user} required onChange={handleChange} inputProps={{ minLength:3, maxLength:50}}/>
-                        </Grid>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12} sm={6}>
+                                <TextField fullWidth label="Username" name="user" value={formData.user} error={Boolean(errors.user)}
+                                    helperText={errors.user} required onChange={handleChange} inputProps={{ minLength:3, maxLength:50}}/>
+                            </Grid>
 
-                        <Grid item xs={12} sm={6}>
-                            <TextField fullWidth label="Mobile" name="mobile" value={formData.mobile} error={Boolean(errors.mobile)}
-                                helperText={errors.mobile} required onChange={handleChange} 
-                                inputProps={{ maxLength: 10, inputMode: "numeric", pattern: "[0-9]{10}"}}
-                        />
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <TextField fullWidth label="First Name" type="text" name="fname" required onChange={handleChange}
-                                inputProps = {{ minLength:2}}/>
-                        </Grid>
-
-                        <Grid item xs={12} sm={6}>
-                            <TextField fullWidth label="Last Name" type="text" name="lname" required onChange={handleChange}
-                                inputProps = {{ minLength:2}} />
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <TextField fullWidth label="Email" type="email" value={formData.email} error={Boolean(errors.email)}
-                                helperText={errors.email} name="email" required onChange={handleChange}/>
-                        </Grid>
-
-                        <Grid item xs={12}>
-                            <TextField fullWidth label="Password" type={hide ? "password" : "text"} name="pwd" required 
-                                onChange={handleChange}
-                                inputProps={{ minLength:6, maxLength:15}} />
-
-                                <p style={{ margin: '0px', fontSize: '12px'}} onClick={hidePassword}>
-                                    {hide ? "Show Password" : "Hide Password"} </p>
-                        </Grid>
-                    </Grid>
-
-                    <Divider sx={{ my: 3 }} />
-
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                        Address Details
-                    </Typography>
-
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Street"
-                            name="street"
-                            required
-                            onChange={handleChange}
-                        />
-                        </Grid>
-
-                        <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="City"
-                            name="city"
-                            required
-                            onChange={handleChange}
-                        />
-                        </Grid>
-
-                        <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="State"
-                            name="state"
-                            required
-                            onChange={handleChange}
-                        />
-                        </Grid>
-
-                        <Grid item xs={12} sm={4}>
-                        <TextField
-                            fullWidth
-                            label="Pincode"
-                            name="pincode"
-                            required
-                            onChange={handleChange}
-                        />
-                        </Grid>
-                    </Grid>
-
-                    <Divider sx={{ my: 3 }} />
-
-                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                        Are you a Shopkeeper (optional) ?
-                    </Typography>
-
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                        <FormControlLabel
-                        control={
-                            <Checkbox
-                            checked={formData.roles.includes("Buyer")}
-                            onChange={() => handleRoleChange("Buyer")}
+                            <Grid item xs={12} sm={6}>
+                                <TextField fullWidth label="Mobile" name="mobile" value={formData.mobile} error={Boolean(errors.mobile)}
+                                    helperText={errors.mobile} required onChange={handleChange} 
+                                    inputProps={{ maxLength: 10, inputMode: "numeric", pattern: "[0-9]{10}"}}
                             />
-                        }
-                        label="Shopkeeper"
-                        />
-                    </Box>
+                            </Grid>
 
-                    <Grid container spacing={2}>
-                        {formData.roles.includes("Buyer") && (
-                            <>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
-                                    fullWidth
-                                    label="Shop Name"
-                                    name="shopname"
-                                    value={formData.shopname}
-                                    error={Boolean(errors.shopname)}
-                                    helperText={errors.shopname}
-                                    required
+                            <Grid item xs={12} sm={6}>
+                                <TextField fullWidth label="First Name" type="text" name="fname" required onChange={handleChange}
+                                    inputProps = {{ minLength:2}}/>
+                            </Grid>
+
+                            <Grid item xs={12} sm={6}>
+                                <TextField fullWidth label="Last Name" type="text" name="lname" required onChange={handleChange}
+                                    inputProps = {{ minLength:2}} />
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField fullWidth label="Email" type="email" value={formData.email} error={Boolean(errors.email)}
+                                    helperText={errors.email} name="email" required onChange={handleChange}/>
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <TextField fullWidth label="Password" type={hide ? "password" : "text"} name="pwd" required 
                                     onChange={handleChange}
-                                    inputProps={{ minLength: 5 }}
-                                    />
-                                </Grid>
+                                    inputProps={{ minLength:6, maxLength:15}} />
 
-                                <Grid item xs={12} sm={6}>
-                                <TextField
-                                    fullWidth
-                                    type="file"
-                                    label="Upload Shop Image"
-                                    InputLabelProps={{ shrink: true }}
-                                    inputProps={{
-                                        accept: "image/jpeg,image/jpg,image/png,image/webp",
-                                    }}
-                                    onChange={(e) => {
-                                        const file = e.target.files[0];
+                                    <p style={{ margin: '0px', fontSize: '12px'}} onClick={hidePassword}>
+                                        {hide ? "Show Password" : "Hide Password"} </p>
+                            </Grid>
+                        </Grid>
 
-                                        if (file) {
-                                            const allowedTypes = [
-                                            "image/jpeg",
-                                            "image/jpg",
-                                            "image/png",
-                                            "image/webp",
-                                            ];
+                        <Divider sx={{ my: 3 }} />
 
-                                            if (!allowedTypes.includes(file.type)) {
-                                            setErrors((prev) => ({
-                                                ...prev,
-                                                shopImage: "Only jpeg, jpg, png, webp allowed",
-                                            }));
-                                            setShopImage(null);
-                                            return;
-                                            }
+                        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                            Address Details
+                        </Typography>
 
-                                            setShopImage(file);
-                                            setErrors((prev) => ({
-                                            ...prev,
-                                            shopImage: "",
-                                            }));
-                                        }
-                                    }}
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                label="Street"
+                                name="street"
+                                required
+                                onChange={handleChange}
+                            />
+                            </Grid>
+
+                            <Grid item xs={12} sm={4}>
+                            <TextField
+                                fullWidth
+                                label="City"
+                                name="city"
+                                required
+                                onChange={handleChange}
+                            />
+                            </Grid>
+
+                            <Grid item xs={12} sm={4}>
+                            <TextField
+                                fullWidth
+                                label="State"
+                                name="state"
+                                required
+                                onChange={handleChange}
+                            />
+                            </Grid>
+
+                            <Grid item xs={12} sm={4}>
+                            <TextField
+                                fullWidth
+                                label="Pincode"
+                                name="pincode"
+                                required
+                                onChange={handleChange}
+                            />
+                            </Grid>
+                        </Grid>
+
+                        <Divider sx={{ my: 3 }} />
+
+                        <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                            Are you a Shopkeeper (optional) ?
+                        </Typography>
+
+                        <Box sx={{ display: "flex", gap: 1 }}>
+                            <FormControlLabel
+                            control={
+                                <Checkbox
+                                checked={formData.roles.includes("Buyer")}
+                                onChange={() => handleRoleChange("Buyer")}
                                 />
+                            }
+                            label="Shopkeeper"
+                            />
+                        </Box>
 
-                                {shopImage && (
-                                    <Typography variant="caption" color="success.main">
-                                    Selected: {shopImage.name}
-                                    </Typography>
-                                )}
+                        <Grid container spacing={2}>
+                            {formData.roles.includes("Buyer") && (
+                                <>
+                                    <Grid item xs={12} sm={6}>
+                                        <TextField
+                                        fullWidth
+                                        label="Shop Name"
+                                        name="shopname"
+                                        value={formData.shopname}
+                                        error={Boolean(errors.shopname)}
+                                        helperText={errors.shopname}
+                                        required
+                                        onChange={handleChange}
+                                        inputProps={{ minLength: 5 }}
+                                        />
+                                    </Grid>
 
-                                {errors.shopImage && (
-                                    <Typography color="error" variant="caption">
-                                    {errors.shopImage}
-                                    </Typography>
-                                )}
-                                </Grid>
-                            </>
-                        )}
-                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        fullWidth
+                                        type="file"
+                                        label="Upload Shop Image"
+                                        InputLabelProps={{ shrink: true }}
+                                        inputProps={{
+                                            accept: "image/jpeg,image/jpg,image/png,image/webp",
+                                        }}
+                                        onChange={(e) => {
+                                            const file = e.target.files[0];
 
-                </DialogContent>
+                                            if (file) {
+                                                const allowedTypes = [
+                                                "image/jpeg",
+                                                "image/jpg",
+                                                "image/png",
+                                                "image/webp",
+                                                ];
 
-                <DialogActions sx={{ px: 3, pb: 2 }}>
-                    <Button onClick={handleClose} color="inherit">
-                        Cancel
-                    </Button>
-                    <Button type="submit" variant="contained" disabled={isLoading}
-                        sx={{
-                            borderRadius: 2,
-                            backgroundColor: "#b15d5dff",
-                            color: "#fff",
-                            px: 3,
-                        }}>
-                        {isLoading ? "Registering..." : "Register"}
-                    </Button>
-                </DialogActions>
-            </form>
-        </Dialog>
+                                                if (!allowedTypes.includes(file.type)) {
+                                                setErrors((prev) => ({
+                                                    ...prev,
+                                                    shopImage: "Only jpeg, jpg, png, webp allowed",
+                                                }));
+                                                setShopImage(null);
+                                                return;
+                                                }
+
+                                                setShopImage(file);
+                                                setErrors((prev) => ({
+                                                ...prev,
+                                                shopImage: "",
+                                                }));
+                                            }
+                                        }}
+                                    />
+
+                                    {shopImage && (
+                                        <Typography variant="caption" color="success.main">
+                                        Selected: {shopImage.name}
+                                        </Typography>
+                                    )}
+
+                                    {errors.shopImage && (
+                                        <Typography color="error" variant="caption">
+                                        {errors.shopImage}
+                                        </Typography>
+                                    )}
+                                    </Grid>
+                                </>
+                            )}
+                        </Grid>
+
+                    </DialogContent>
+
+                    <DialogActions sx={{ px: 3, pb: 2 }}>
+                        <Button onClick={handleClose} color="inherit">
+                            Cancel
+                        </Button>
+                        <Button type="submit" variant="contained" disabled={isLoading}
+                            sx={{
+                                borderRadius: 2,
+                                backgroundColor: "#b15d5dff",
+                                color: "#fff",
+                                px: 3,
+                            }}>
+                            {isLoading ? "Registering..." : "Register"}
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                >
+                <Alert
+                    onClose={handleSnackbarClose}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: "100%" }}
+                >
+                    Registration successful
+                </Alert>
+            </Snackbar>
+        </>
     );
 }
 
