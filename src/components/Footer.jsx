@@ -44,7 +44,10 @@ function Footer() {
                 <IconButton sx={{ color: "#fff" }}>
                   <XIcon />
                 </IconButton>
-                <IconButton sx={{ color: "#fff" }}>
+                <IconButton href="https://www.linkedin.com/in/premanshu-ankit"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                sx={{ color: "#fff" }}>
                   <LinkedInIcon />
                 </IconButton>
                 <IconButton sx={{ color: "#fff" }}>
@@ -115,7 +118,21 @@ function Footer() {
             color: "#1a1a1a",
             fontSize: "14px",
           }}>
-          © {new Date().getFullYear()} Scrap Manager. All Rights Reserved.
+            © {new Date().getFullYear()} Scrap Manager. All Rights Reserved.{" "}
+            <span style={{ marginLeft: "4px" }}>
+              Developed by{" "}
+            </span>
+            <a
+              href="https://github.com/Premanshuankit"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                color: "#1a1a1a",
+                fontWeight: 500,
+                textDecoration: "underline",
+              }}>
+              Premanshu Ankit
+            </a>
         </Box>
       </Box>
     );
