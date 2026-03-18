@@ -10,7 +10,7 @@ import RecyclingIcon from "@mui/icons-material/Recycling";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import InstagramIcon from "@mui/icons-material/Instagram";
-import XIcon from "@mui/icons-material/X";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 function Footer() {
     return (
@@ -41,8 +41,11 @@ function Footer() {
               </Typography>
 
               <Box>
-                <IconButton sx={{ color: "#fff" }}>
-                  <XIcon />
+                <IconButton href="https://github.com/Premanshuankit"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{ color: "#fff" }}>
+                  <GitHubIcon />
                 </IconButton>
                 <IconButton href="https://www.linkedin.com/in/premanshu-ankit"
                                 target="_blank"
