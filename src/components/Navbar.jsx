@@ -56,7 +56,7 @@ function Navbar() {
     const activeNav = {
         "&.active": {
             fontWeight: 700,
-            borderBottom: "2px solid white",
+            borderBottom: "2px solid cyan",
         },
     };
 
