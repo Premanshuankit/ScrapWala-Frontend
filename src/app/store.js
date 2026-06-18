@@ -6,6 +6,7 @@ import { marketplaceApi } from "../features/marketplace/marketplaceApi";
 import { transactionApi } from "../features/transaction/transactionApi";
 import { sellerApi } from "../features/seller/sellerApi";
 import { inventoryApi } from "../features/inventory/inventoryApi";
+import { chatApi } from "../features/chat/chatApi";
 
 import { persistStore, persistReducer } from "redux-persist";
 
@@ -29,11 +30,12 @@ export const store = configureStore({
     [transactionApi.reducerPath]: transactionApi.reducer,
     [sellerApi.reducerPath]: sellerApi.reducer,
     [inventoryApi.reducerPath]: inventoryApi.reducer,
+    [chatApi.reducerPath]: chatApi.reducer,
     auth: persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }).concat(authApi.middleware, listingApi.middleware, 
-    marketplaceApi.middleware, transactionApi.middleware, sellerApi.middleware, inventoryApi.middleware),    
+    marketplaceApi.middleware, transactionApi.middleware, sellerApi.middleware, inventoryApi.middleware, chatApi.middleware),    
 });
 
 export const persistor = persistStore(store);
