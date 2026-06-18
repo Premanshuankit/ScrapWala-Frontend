@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import BuyerIncoming from "./pages/BuyerIncoming";
 import SellerRequests from "./pages/SellerRequests";
 import Inventory from "./pages/Inventory";
+import ChatWidget from "./components/chat/ChatWidget";
 
 const Home = lazy(() => import("./components/Home"));
 
@@ -33,6 +34,7 @@ function App() {
         </Suspense>
 
         <Footer />
+        <ChatWidget />
       </Router>
     );
 }
